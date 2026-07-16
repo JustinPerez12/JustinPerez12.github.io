@@ -1,70 +1,92 @@
-# Getting Started with Create React App
+# justindavidperez.com
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+My personal site — a single-page portfolio built with React and Vite, deployed to GitHub Pages.
 
-## Available Scripts
+It also generates my résumé. Both read from the same data, so they can't disagree with each other.
 
-In the project directory, you can run:
+## Running it
 
-### `npm start`
+```bash
+npm install
+npm run dev        # http://localhost:5173
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Port 5173, not 3000 — 3000 is taken by another project on my machine, and `strictPort` is on so a
+collision fails loudly instead of silently serving something else.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Scripts
 
-### `npm test`
+| Command              | What it does                                       |
+| -------------------- | -------------------------------------------------- |
+| `npm run dev`        | Dev server with hot reload                         |
+| `npm run build`      | Production build into `dist/`                      |
+| `npm run preview`    | Serve the built output locally                     |
+| `npm test`           | Run the test suite once (Vitest)                   |
+| `npm run test:watch` | Tests in watch mode                                |
+| `npm run lint`       | ESLint                                             |
+| `npm run resume`     | Regenerate the résumé PDF from `src/data/`         |
+| `npm run deploy`     | Build and publish `dist/` to the `gh-pages` branch |
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Updating content
 
-### `npm run build`
+Content lives in `src/data/`, not in the components:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- `site.js` — name, tagline, intro, email, social links, nav, résumé summary
+- `experience.js` — jobs, most recent first (`end: null` means current)
+- `projects.js` — featured work
+- `skills.js` — grouped tech
+- `education.js` — résumé only
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The components map over these, so adding a job or project is a data edit, not a markup edit. The
+tests import the same modules and assert every entry renders, so new content extends coverage
+automatically.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Two rules worth keeping:
 
-### `npm run eject`
+- **Employment goes in `experience.js`; side projects go in `projects.js`.** Listing a side project
+  as a job reads as employment that didn't happen.
+- **`highlights` are ordered strongest-first.** The résumé takes from the top (see below), so
+  reordering the array reorders the résumé.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## The résumé
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+`src/Assets/Justin_Perez_Resume.pdf` is **generated, not hand-edited** — `npm run resume` renders it
+from the same `src/data/` files the site uses. A hand edit is lost on the next run. Edit the data,
+run the script, commit the PDF.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+It targets senior roles, so it's worded for ownership and scope rather than tasks, and it opens with
+the positioning line in `site.resumeSummary`.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+**It has to stay one page.** The script parses the PDF it just wrote and **exits 1** if it spilled,
+so a too-long bullet fails loudly instead of quietly becoming a two-pager. There's only a few pixels
+of headroom. If it spills, ration space in `scripts/resume-template.js`:
 
-## Learn More
+- `BULLET_LIMIT` — bullets per company (NICE 6, Cox 4). The site still renders all of them.
+- `OMIT_ROLES` — roles left off entirely (the 2022 internship). Still on the site.
+- `CONDENSED_PROJECTS` — projects reduced to a heading (the capstone).
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Site prose and résumé prose differ where they must: projects carry a `resumeBlurb` (tight, for
+print) next to `summary`/`detail` (discursive, for the site). They sit next to each other in
+`projects.js` so they move together.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Rendering uses `puppeteer-core` against the installed Chrome rather than `puppeteer`, which would
+drag a ~130MB browser into the repo. Set `CHROME_PATH` if Chrome isn't at a standard location.
 
-### Code Splitting
+## Deploying
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```bash
+npm run deploy
+```
 
-### Analyzing the Bundle Size
+Builds and force-pushes `dist/` to the `gh-pages` branch, which GitHub Pages serves at
+justindavidperez.com. The custom domain comes from `public/CNAME`, which Vite copies into `dist/` on
+every build — don't move it out of `public/` or the domain resets on the next deploy.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+`main` is the working branch. `gh-pages` is generated output — never edit it by hand.
 
-### Making a Progressive Web App
+## Notes
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- `public/og-image.png` is the link-preview card (1200×630). It's a static image that duplicates the
+  hero copy, so if the tagline or employer changes it needs regenerating to match.
+- Unused images still sit in `src/Assets/`. Vite only bundles what's imported, so they cost nothing
+  at build time — but don't assume a file there is live.

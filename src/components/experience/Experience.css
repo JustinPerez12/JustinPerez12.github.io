@@ -1,83 +1,136 @@
-.experience__container {
-  display: grid;
-  grid-template-columns: 10fr 10fr 10fr;
-  gap: 2rem;
-  padding: 0 5%;
-}
-
-.experience__item {
-  background: var(--color-bg-variant);
-  padding: 1.3rem;
-  border-radius: 2rem;
-  border: 1px solid transparent;
-  text-align: center;
-  transition: var(--transition);
-}
-
-.experience__item:hover {
-  border-color: var(--color-primary-variant);
-  background: transparent;
-}
-
-.experience__item-image {
-  max-width: 70%;
-  border-radius: 1.5rem;
-  overflow: hidden;
-  padding: 2rem;
-  margin: 0 auto;
-}
-
-.experience__item h1 {
-  margin: -2rem 0 3rem;
-  font-weight: bold;
-}
-
-.experience__item h2 {
-  margin: -2rem 0 2rem;
-  font-weight: 200;
-}
-
-.experience__item h3 {
-  margin: 1.2rem 0 2rem;
-}
-
-.experience__item-cta {
+.timeline {
   display: flex;
-  margin: 0 auto;
-  gap: 1rem;
+  flex-direction: column;
 }
 
-.list__item {
-  font-size: 1.1rem;
-  list-style-type: circle;
-  list-style-position: inside;
-  margin: 2rem 0;
+.timeline__item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-6);
 }
 
-/*===============Media Queries (Medium Devices) ===================*/
-@media screen and (max-width: 1024px) {
-  .experience__container {
-    grid-template-columns: 1fr;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .experience__container > div {
-    width: 80%;
-    padding: 1rem;
-    margin: 0 auto;
-  }
-
-  .experience__content {
-    padding: 1rem;
-    row-gap: 0.5rem;
-  }
+.timeline__marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding-top: 0.45rem;
 }
 
-/*===============Small Queries (Medium Devices) ===================*/
-@media screen and (max-width: 600px) {
-  .experience__container {
-    grid-template-columns: 1fr;
-    margin-left: auto;
-    margin-right: auto;
+.timeline__dot {
+  width: 9px;
+  height: 9px;
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  background: var(--border-strong);
+}
+
+.timeline__dot--current {
+  background: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-glow);
+}
+
+/* The connecting rail — drawn on the marker column, skipped on the last row. */
+.timeline__marker::after {
+  content: '';
+  flex: 1;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--border), transparent);
+}
+
+.timeline__item:last-child .timeline__marker::after {
+  display: none;
+}
+
+.timeline__body {
+  padding-bottom: var(--space-12);
+}
+
+.timeline__item:last-child .timeline__body {
+  padding-bottom: 0;
+}
+
+.timeline__period {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-subtle);
+  margin-bottom: var(--space-2);
+}
+
+.timeline__badge {
+  padding: 2px var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--accent);
+  background: var(--accent-glow);
+  border-radius: var(--radius-full);
+}
+
+.timeline__title {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  margin-bottom: var(--space-4);
+}
+
+.timeline__at {
+  color: var(--text-subtle);
+  font-weight: 400;
+}
+
+.timeline__company {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--accent);
+  transition: color var(--transition);
+}
+
+.timeline__company svg {
+  font-size: 0.8em;
+  transition: transform var(--transition);
+}
+
+.timeline__company:hover {
+  color: var(--accent-hover);
+}
+
+.timeline__company:hover svg {
+  transform: translate(2px, -2px);
+}
+
+.timeline__highlights {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: var(--prose-width);
+}
+
+.timeline__highlights li {
+  position: relative;
+  padding-left: var(--space-6);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.7;
+}
+
+.timeline__highlights li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.7em;
+  width: 12px;
+  height: 1px;
+  background: var(--border-strong);
+}
+
+@media (max-width: 640px) {
+  .timeline__item {
+    gap: var(--space-4);
+  }
+
+  .timeline__title {
+    font-size: var(--text-lg);
   }
 }

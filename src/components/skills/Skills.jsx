@@ -1,160 +1,34 @@
-import React from 'react'
+import { skills } from '../../data/skills'
 import './Skills.css'
-import {BsFillBookmarkCheckFill} from 'react-icons/bs'
 
-const Skills = () => {
-  return (
-    <section id='skills'>
-      <h5>Skills in languages, frameworks, and architectures</h5>
-      <h2>My Skills</h2>
-      <div className='skills__container'>
-        <div className='skills__frontend'>
-          <h3>Frontend development</h3>
-          <div className='skills__content'>
-            <article>
-            <BsFillBookmarkCheckFill className='skills__details-icon'/>
-            <div>
-              <h4>HTML</h4>
-              <small className='text-light'>Proficient</small>
-            </div>
-            </article>
-
-            <article>
-            <BsFillBookmarkCheckFill className='skills__details-icon'/>
-            <div>
-              <h4>CSS</h4>
-              <small className='text-light'>Proficient</small>
-            </div>
-            </article>
-
-            <article>
-            <BsFillBookmarkCheckFill className='skills__details-icon' />
-            <div>
-              <h4>Bootstrap</h4>
-              <small className='text-light'>Proficient</small>
-            </div>
-            </article>
-
-            <article>
-            <BsFillBookmarkCheckFill className='skills__details-icon'/>
-            <div>
-              <h4>ReactJS</h4>
-              <small className='text-light'>Proficient</small>
-            </div>
-            </article>
-
-            <article>
-            <BsFillBookmarkCheckFill className='skills__details-icon'/>
-            <div>
-              <h4>JavaScript</h4>
-              <small className='text-light'>Intermediate</small>
-            </div>
-            </article>
-
-            <article>
-            <BsFillBookmarkCheckFill className='skills__details-icon'/>
-            <div>
-              <h4>TypeScript</h4>
-              <small className='text-light'>Intermediate</small>
-            </div>
-            </article>
-
-            <article>
-            <BsFillBookmarkCheckFill className='skills__details-icon'/>
-            <div>
-              <h4>Tailwind</h4>
-              <small className='text-light'>Proficient</small>
-            </div>
-            </article>
-
-            <article>
-            <BsFillBookmarkCheckFill className='skills__details-icon'/>
-            <div>
-              <h4>Mantine</h4>
-              <small className='text-light'>Novice</small>
-            </div>
-            </article>
-
-            
-
-          </div>
-        </div>
-
-        <div className='skills__backend'>
-        <h3>Backend development</h3>
-          <div className='skills__content'>
-            <article>
-            <BsFillBookmarkCheckFill className='skills__details-icon'/>
-            <h4>Python</h4>
-            <small className='text-light'>Intermediate</small>
-            </article>
-
-            <article>
-            <BsFillBookmarkCheckFill className='skills__details-icon'/>
-            <h4>C#</h4>
-            <small className='text-light'>Proficient</small>
-            </article>
-
-            <article>
-            <BsFillBookmarkCheckFill className='skills__details-icon'/>
-            <h4>c++</h4>
-            <small className='text-light'>Proficient</small>
-            </article>
-
-            <article>
-            <BsFillBookmarkCheckFill className='skills__details-icon'/>
-            <h4>c</h4>
-            <small className='text-light'>Proficient</small>
-            </article>
-
-            <article>
-            <BsFillBookmarkCheckFill className='skills__details-icon'/>
-            <h4>Java</h4>
-            <small className='text-light'>Proficient</small>
-            </article>
-
-            <article>
-            <BsFillBookmarkCheckFill className='skills__details-icon'/>
-            <h4>ASP Core</h4>
-            <small className='text-light'>Proficient</small>
-            </article>
-
-            <article>
-            <BsFillBookmarkCheckFill className='skills__details-icon'/>
-            <h4>MySQL</h4>
-            <small className='text-light'>Intermediate</small>
-            </article>
-
-            <article>
-            <BsFillBookmarkCheckFill className='skills__details-icon'/>
-            <h4>Docker</h4>
-            <small className='text-light'>Intermediate</small>
-            </article>
-
-            <article>
-            <BsFillBookmarkCheckFill className='skills__details-icon'/>
-            <h4>Next.js</h4>
-            <small className='text-light'>Intermediate</small>
-            </article>
-
-            <article>
-            <BsFillBookmarkCheckFill className='skills__details-icon'/>
-            <h4>AWS</h4>
-            <small className='text-light'>Intermediate</small>
-            </article>
-
-            <article>
-            <BsFillBookmarkCheckFill className='skills__details-icon'/>
-            <h4>Azure</h4>
-            <small className='text-light'>Intermediate</small>
-            </article>
-
-          </div>
-        </div>
-
+const Skills = () => (
+  <section id="skills" className="section">
+    <div className="container">
+      <div className="section__header">
+        <p className="section__label">Skills</p>
+        <h2 className="section__title">What I work with</h2>
+        <p className="section__intro">
+          Tools I&apos;ve shipped production code with. Depth varies — the projects above are the
+          honest measure.
+        </p>
       </div>
-    </section>
-  )
-}
+
+      <dl className="skills">
+        {skills.map(({ group, items }) => (
+          <div key={group} className="skills__group">
+            <dt className="skills__label">{group}</dt>
+            <dd className="skills__items">
+              {items.map((item) => (
+                <span key={item} className="tag">
+                  {item}
+                </span>
+              ))}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+)
 
 export default Skills

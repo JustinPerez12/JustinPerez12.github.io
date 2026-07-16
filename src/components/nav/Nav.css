@@ -1,37 +1,142 @@
-nav
-{
-    background:rgba(0, 0, 0, 0.3);
-    width: max-content;
-    display: block;
-    padding: 0.7rem 1.7rem;
-    z-index: 2;
-    position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 2rem;
-    display: flex;
-    gap: .8rem;
-    border-radius: 3rem;
-    backdrop-filter: blur(15px);
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--transition);
 }
 
-nav a
-{
-    background: transparent;
-    padding: .9rem;
-    border-radius: 50%;
-    display: flex;
-    color: var(--color-light);
-    font-size: 1.1rem;
+/* Only show the rule once there's content scrolled under it. */
+@supports (animation-timeline: scroll()) {
+  .nav {
+    animation: nav-border linear both;
+    animation-timeline: scroll();
+    animation-range: 0 120px;
+  }
+
+  @keyframes nav-border {
+    to {
+      border-bottom-color: var(--border);
+    }
+  }
 }
 
-nav a:hover
-{
-    background:rgba(0, 0, 0, 0.3);
+@supports not (animation-timeline: scroll()) {
+  .nav {
+    border-bottom-color: var(--border);
+  }
 }
 
-nav a.active
-{
-    background: var(--color-bg);
-    color:var(--color-white);
+.nav__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  width: 100%;
+  max-width: var(--content-width);
+  margin-inline: auto;
+  padding: var(--space-4) var(--space-6);
+}
+
+.nav__brand {
+  font-weight: 600;
+  font-size: var(--text-sm);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  transition: color var(--transition);
+}
+
+.nav__brand:hover {
+  color: var(--accent);
+}
+
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.nav__link {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  transition: color var(--transition), background-color var(--transition);
+}
+
+.nav__link:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+.nav__link--active {
+  color: var(--accent);
+}
+
+.nav__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.nav__icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  transition: color var(--transition), background-color var(--transition);
+}
+
+.nav__icon-btn:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+.nav__icon-btn--menu {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .nav__icon-btn--menu {
+    display: inline-flex;
+  }
+
+  .nav__links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: var(--space-2);
+    background: var(--bg-elevated);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow);
+
+    /* Collapsed by default; `visibility` keeps it out of the tab order. */
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity var(--transition), transform var(--transition),
+      visibility var(--transition);
+  }
+
+  .nav__links--open {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+  }
+
+  .nav__link {
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--text-base);
+  }
 }

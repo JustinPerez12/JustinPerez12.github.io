@@ -1,46 +1,55 @@
-import React from 'react'
+import Portrait from '../../Assets/professional_photo3.png'
 import './About.css'
-import BiltmoreFront from '../../Assets/biltmore_front.jpg'
-import {FaBuilding} from 'react-icons/fa'
-import {GiFullFolder} from 'react-icons/gi'
 
-const About = () => {
-  return (
-    <section id='about'>
-      <h5>All About Me</h5>
-      <h2>About Me</h2>
-      <div className='container about__container'>
-        <div className='about__me'>
-          <div className='about__me-image'>
-            <img src={BiltmoreFront} alt='Me at the Biltmore'/>
-          </div>
+const About = () => (
+  <section id="about" className="section">
+    <div className="container about">
+      <div className="about__content">
+        <p className="section__label">About</p>
+        <h2 className="section__title">A bit of background</h2>
+
+        <div className="about__prose">
+          <p>
+            I found computer science in my first class at the University of Utah in 2019. I&apos;d
+            enrolled as a computer engineering major and switched within the year — it was pretty
+            clear pretty fast which one I actually wanted to do.
+          </p>
+          <p>
+            I started at Cox Automotive on the Product Security Engineering team, where I spent two
+            years building the tooling that told thousands of software components whether they were
+            safe to ship. That work is where I got comfortable with the parts of engineering people
+            tend to skip: graph data modeling, ETL that has to be right, and vendor integrations
+            that break in ways the docs never mention.
+          </p>
+          <p>
+            Now I&apos;m a Software Engineer 2 at NICE, working on federated knowledge retrieval and
+            pulling expensive work off user-facing request paths and onto event-driven services. A
+            lot of the job is quieter than that: chasing a collation mismatch across 600 databases,
+            or closing an access-control hole without breaking login.
+          </p>
+          <p>
+            Outside of work I build things I want to exist — <a href="#work">Dynasty Futures</a>, a
+            production trading platform I own end to end, and <a href="#work">Campus Core</a>, an
+            education platform we&apos;re taking to market. Both taught me the same lesson: the hard
+            part usually isn&apos;t the code, it&apos;s the state.
+          </p>
         </div>
-        <div className='about__content'>
-            <div className='about__cards'>
-
-              <article className='about__card'>
-                <FaBuilding className='about__icon'/>
-                <h5>Working Experience</h5>
-                <small>2+ Year Working in Industry</small>
-              </article>
-
-              <article className='about__card'>
-                <GiFullFolder className='about__icon'/>
-                <h5>Projects</h5>
-                <small>3 Completed Projects</small>
-              </article>
-
-            </div>
-            <p>
-              I discovered my passion for computer science during my first class at the University of Utah in 2019. Originally a computer engineering major, I quickly realized that computer science was my true calling. After graduating, I embarked on my professional journey at Cox Automotive, where I've thrived and grown ever since.
-              In my current role as a Software Engineer I on the Product Security Engineering team, I develop and maintain enterprise-level security software used company-wide. I specialize in integrating with top security vendors like Veracode and Aqua, and in creating tools that deliver comprehensive security metrics for our software components.
-              Every day, I am eager to expand my skills, from building infrastructure with Terraform in AWS to developing software using languages and frameworks like Go, C#, TypeScript, React, and so much more. I am passionate about learning and excited about what the future holds for my career in software.
-            </p>
-            <a href='#contact' className='btn btn-primary'>Get in Contact With Me</a>
-          </div>
       </div>
-    </section>
-  )
-}
+
+      <div className="about__aside">
+        <div className="about__portrait">
+          <img
+            src={Portrait}
+            alt="Justin Perez"
+            width="480"
+            height="600"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+)
 
 export default About
