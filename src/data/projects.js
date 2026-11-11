@@ -9,13 +9,15 @@
 export const projects = [
   {
     name: 'Dynasty Futures',
-    year: '2026',
-    role: 'Solo build — frontend, backend, and infrastructure',
+    year: '2026 — Present',
+    // Equity stake stays off the public page — it's what justifies "founding
+    // engineer", not a thing to advertise.
+    role: 'Founding engineer — architecture and every technical decision',
     tagline: 'Production trading platform for a futures prop firm',
     resumeBlurb:
-      'Solo-built production trading platform for a futures prop firm: live account dashboards, equity and P&L curves, a payout eligibility engine, and KYC. React/TypeScript, Node/Express, Prisma, Postgres, AWS, Terraform.',
+      'Founding engineer on a production trading platform for a futures prop firm, owning every technical decision: live dashboards, equity and P&L curves, a payout eligibility engine, KYC. React/TypeScript, Node/Express, Prisma, Postgres, AWS, Terraform.',
     summary:
-      'A production trading platform for a futures prop firm — live account dashboards, equity and P&L curves, a payout eligibility engine, KYC, affiliate tracking, and a support desk. Built solo: React front end, typed Node API over Postgres, deployed to AWS on containerized infrastructure defined entirely in Terraform with CI/CD through GitHub Actions.',
+      'A production trading platform for a futures prop firm — live account dashboards, equity and P&L curves, a payout eligibility engine, KYC, affiliate tracking, and a support desk. I was the founding engineer and set the architecture: a React front end, a typed Node API over Postgres, and AWS infrastructure defined entirely in Terraform with CI/CD through GitHub Actions.',
     detail:
       'The hard part was never the UI — it was reconciling state against third-party trading APIs with no transactional guarantees, which meant idempotent sync jobs, webhook receivers that never trust their payload, and eligibility rules that fail safe.',
     tech: ['TypeScript', 'React', 'Node.js', 'Express', 'Prisma', 'PostgreSQL', 'AWS', 'Terraform'],

@@ -22,6 +22,7 @@ export const experience = [
     href: 'https://www.nice.com/',
     note: 'Federated retrieval platform · CXone Expert · auth library · conversational-AI integration',
     highlights: [
+      'Co-designed and shipped an autonomous AI software engineer (Claude Agent SDK + AWS) that turns tickets into tested, reviewed pull requests for a large production codebase, with sandboxed execution, cost-aware model routing, and human-in-the-loop controls.',
       'Architected a federated knowledge-retrieval service in Python from its earliest commits — owning the request/response contract, config-driven provider dispatch, and the unified contract that merges results across providers with reciprocal rank fusion. Authored four architecture decision records and drove them through review to team consensus.',
       'Own the platform\'s OIDC/SSO surface: delivered preferred-username through launch, a safe revert under incident, and a hardened re-land; hardened the multi-tenant redirector; and contributed PKCE upstream to an open-source PHP auth library before enabling it by default across the product.',
       'Led the migration of search analytics from a synchronous, request-blocking query onto an event-driven .NET 8 service on SNS/SQS — KEDA scale-to-zero, dead-letter handling, per-site feature-flag rollout — and authored the Terragrunt, CloudFormation, and Helm infrastructure behind it across nine environments.',
@@ -52,14 +53,14 @@ export const experience = [
   },
   {
     company: 'Wavetronix',
-    title: 'Software Engineering Intern',
+    title: 'Software Engineer',
     location: 'Salt Lake City, UT',
-    start: '2022-05',
+    start: '2022-03',
     end: '2023-01',
-    period: 'May 2022 — Jan 2023',
+    period: 'March 2022 — Jan 2023',
     href: 'https://www.wavetronix.com/',
     highlights: [
-      'Developed a C# application that simulated traffic patterns, letting engineers design intersections and optimize layouts.',
+      'Developed and maintained a C# / .NET Framework application that simulated traffic patterns, letting engineers design and optimize intersection layouts.',
       'Built a companion C# tool that processed simulation output into graphed visualizations, making complex traffic data readable at a glance.',
     ],
   },
