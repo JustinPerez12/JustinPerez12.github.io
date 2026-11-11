@@ -27,3 +27,6 @@ Thumbs.db
 
 # generated resume preview
 scripts/.resume-preview.html
+
+# job-tailored resumes + overlays — never deployed, never the canonical PDF
+/tailored

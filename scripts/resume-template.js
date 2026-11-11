@@ -18,21 +18,71 @@ const RESUME_TITLE = 'Full Stack Software Engineer'
  * ownership. `highlights` are ordered strongest-first in the data; the résumé
  * takes from the top while the site renders all of them.
  */
-const BULLET_LIMIT = { NICE: 6, 'Cox Automotive': 4 }
+const BULLET_LIMIT = { NICE: 5, 'Cox Automotive': 3, Wavetronix: 2 }
 
 /**
- * Omitted from the résumé entirely. A 2022 internship taken during school is
- * noise next to three years of platform ownership, and it costs lines the
- * senior story needs. It still appears on the site.
+ * Roles omitted from the résumé entirely (they still appear on the site). Empty
+ * by default — every role earns its place on the one-pager right now.
  */
-const OMIT_ROLES = new Set(['Wavetronix'])
+const OMIT_ROLES = []
 
-/** Same reasoning: the capstone gets a line, the production products get room. */
-const CONDENSED_PROJECTS = new Set(['Huddle Up'])
+/**
+ * Shown as a title line only on the résumé (full blurb still renders on the
+ * site). The capstone and the side project yield their résumé blurbs so the
+ * three paid roles keep their bullets on the one-pager.
+ */
+const CONDENSED_PROJECTS = ['Huddle Up', 'Campus Core']
 
-const bulletsFor = (job) => job.highlights.slice(0, BULLET_LIMIT[job.company] ?? job.highlights.length)
+/**
+ * Optional per-job-application tailoring, applied ON TOP of the base data
+ * without ever mutating src/data/ (so the site is never affected). The
+ * canonical `npm run resume` passes nothing and renders the untouched default;
+ * the tailoring skill passes an overlay to foreground what a given posting
+ * cares about. Every field is optional.
+ *
+ *   {
+ *     title,                                  // override the title line
+ *     summary,                                // override the résumé summary (résumé-only anyway)
+ *     omitRoles:  ['Company'],                // replaces the default omit set
+ *     condensedProjects: ['Project'],         // replaces the default condensed set
+ *     bulletLimit: { Company: n },            // merged over the defaults
+ *     bullets:    { Company: ['...','...'] }, // REPLACES that company's bullets verbatim, in order
+ *     projectOrder: ['Name', ...],            // reorder projects by name
+ *     projectBlurbs: { Name: '...' },         // override a project's résumé blurb
+ *     skills:     [{ group, items }, ...],    // replaces the skills section entirely
+ *   }
+ *
+ * Reorder and select freely; when you rewrite a bullet keep it TRUE — tailoring
+ * reweights real work, it never invents it.
+ */
+export function renderResume(overlay = {}) {
+  const resumeTitle = overlay.title ?? RESUME_TITLE
+  const resumeSummary = overlay.summary ?? site.resumeSummary
+  const omitRoles = new Set(overlay.omitRoles ?? OMIT_ROLES)
+  const condensedProjects = new Set(overlay.condensedProjects ?? CONDENSED_PROJECTS)
+  const bulletLimit = { ...BULLET_LIMIT, ...(overlay.bulletLimit ?? {}) }
 
-export function renderResume() {
+  const bulletsFor = (job) =>
+    overlay.bullets?.[job.company] ??
+    job.highlights.slice(0, bulletLimit[job.company] ?? job.highlights.length)
+
+  const resumeProjects = (() => {
+    const base = overlay.projectOrder
+      ? overlay.projectOrder
+          .map((name) => projects.find((p) => p.name === name))
+          .filter(Boolean)
+      : projects
+    return overlay.projectBlurbs
+      ? base.map((p) => ({ ...p, resumeBlurb: overlay.projectBlurbs[p.name] ?? p.resumeBlurb }))
+      : base
+  })()
+
+  const resumeSkills = overlay.skills ?? skills
+
+  return renderHtml({ resumeTitle, resumeSummary, omitRoles, condensedProjects, bulletsFor, resumeProjects, resumeSkills })
+}
+
+function renderHtml({ resumeTitle, resumeSummary, omitRoles, condensedProjects, bulletsFor, resumeProjects, resumeSkills }) {
   const contacts = [
     { text: site.email, href: `mailto:${site.email}` },
     { text: 'justindavidperez.com', href: 'https://justindavidperez.com' },
@@ -66,7 +116,7 @@ export function renderResume() {
   body {
     font-family: 'Inter', -apple-system, sans-serif;
     font-size: 8.7pt;
-    line-height: 1.3;
+    line-height: 1.25;
     color: var(--ink);
     -webkit-font-smoothing: antialiased;
   }
@@ -191,18 +241,18 @@ export function renderResume() {
 <body>
   <header>
     <div class="name">${escape(site.name)}</div>
-    <div class="title">${escape(RESUME_TITLE)}</div>
+    <div class="title">${escape(resumeTitle)}</div>
     <div class="contacts">
       ${contacts.map((c) => `<span><a href="${escape(c.href)}">${escape(c.text)}</a></span>`).join('\n      ')}
     </div>
   </header>
 
-  <p class="summary">${escape(site.resumeSummary)}</p>
+  <p class="summary">${escape(resumeSummary)}</p>
 
   <section>
     <h2>Experience</h2>
     ${experience
-      .filter((job) => !OMIT_ROLES.has(job.company))
+      .filter((job) => !omitRoles.has(job.company))
       .map(
         (job) => `<div class="entry">
       <div class="entry__head">
@@ -224,7 +274,7 @@ export function renderResume() {
 
   <section>
     <h2>Projects</h2>
-    ${projects
+    ${resumeProjects
       .map(
         (project) => `<div class="entry">
       <div class="entry__head">
@@ -233,7 +283,7 @@ export function renderResume() {
       </div>
       <div class="entry__sub"><span>${escape(project.href)}</span></div>
       ${
-        CONDENSED_PROJECTS.has(project.name)
+        condensedProjects.has(project.name)
           ? ''
           : `<ul><li>${escape(project.resumeBlurb)}</li></ul>`
       }
@@ -245,7 +295,7 @@ export function renderResume() {
   <section>
     <h2>Skills</h2>
     <dl class="skills">
-      ${skills
+      ${resumeSkills
         .map(
           (group) =>
             `<dt>${escape(group.group)}</dt><dd>${escape(group.items.join(', '))}</dd>`,

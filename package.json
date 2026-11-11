@@ -14,7 +14,8 @@
     "lint": "eslint .",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
-    "resume": "node scripts/build-resume.mjs"
+    "resume": "node scripts/build-resume.mjs",
+    "resume:tailor": "node scripts/build-resume.mjs"
   },
   "dependencies": {
     "react": "^19.2.7",

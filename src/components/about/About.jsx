@@ -29,8 +29,8 @@ const About = () => (
           </p>
           <p>
             Outside of work I build things I want to exist — <a href="#work">Dynasty Futures</a>, a
-            production trading platform I own end to end, and <a href="#work">Campus Core</a>, an
-            education platform we&apos;re taking to market. Both taught me the same lesson: the hard
+            production trading platform I was the founding engineer on, and <a href="#work">Campus Core</a>,
+            an education platform we&apos;re taking to market. Both taught me the same lesson: the hard
             part usually isn&apos;t the code, it&apos;s the state.
           </p>
         </div>

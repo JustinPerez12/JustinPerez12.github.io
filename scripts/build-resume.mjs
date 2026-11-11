@@ -10,15 +10,45 @@
  */
 import { existsSync, writeFileSync, mkdirSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import puppeteer from 'puppeteer-core'
 import { PDFDocument } from 'pdf-lib'
 import { renderResume } from './resume-template.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '..')
-const PDF_OUT = resolve(ROOT, 'src/Assets/Justin_Perez_Resume.pdf')
+const DEFAULT_PDF_OUT = resolve(ROOT, 'src/Assets/Justin_Perez_Resume.pdf')
 const HTML_OUT = resolve(ROOT, 'scripts/.resume-preview.html')
+
+/**
+ * Tailoring hooks (optional). With no args this builds the canonical résumé to
+ * src/Assets/ exactly as before — src/data/ is the single source of truth.
+ *
+ *   --overlay <path>  a JS module default-exporting an overlay object (see
+ *                     resume-template.js) layered on top of the base data.
+ *   --out <path>      where to write the PDF (default: the canonical location).
+ *
+ * The tailoring skill always passes both, writing into the gitignored tailored/
+ * dir so a job-specific résumé can never reach git or the deployed site.
+ */
+function parseArgs(argv) {
+  const args = { overlay: null, out: null }
+  for (let i = 2; i < argv.length; i++) {
+    if (argv[i] === '--overlay') args.overlay = argv[++i]
+    else if (argv[i] === '--out') args.out = argv[++i]
+  }
+  return args
+}
+
+async function loadOverlay(overlayArg) {
+  if (!overlayArg) return {}
+  const overlayPath = resolve(ROOT, overlayArg)
+  if (!existsSync(overlayPath)) {
+    throw new Error(`Overlay not found: ${overlayPath}`)
+  }
+  const mod = await import(pathToFileURL(overlayPath).href)
+  return mod.default ?? mod.overlay ?? {}
+}
 
 const CHROME_CANDIDATES = [
   process.env.CHROME_PATH,
@@ -49,7 +79,11 @@ function findChrome() {
 }
 
 async function main() {
-  const html = renderResume()
+  const { overlay: overlayArg, out: outArg } = parseArgs(process.argv)
+  const overlay = await loadOverlay(overlayArg)
+  const pdfOut = outArg ? resolve(ROOT, outArg) : DEFAULT_PDF_OUT
+
+  const html = renderResume(overlay)
 
   // Keep the intermediate HTML around — it's the fastest way to debug layout,
   // and `file://` loading lets the webfonts resolve.
@@ -63,8 +97,9 @@ async function main() {
     await page.goto(`file://${HTML_OUT.replace(/\\/g, '/')}`, { waitUntil: 'networkidle0' })
     await page.evaluateHandle('document.fonts.ready')
 
+    mkdirSync(dirname(pdfOut), { recursive: true })
     const pdf = await page.pdf({
-      path: PDF_OUT,
+      path: pdfOut,
       format: 'letter',
       printBackground: true,
       margin: { top: '0.45in', bottom: '0.45in', left: '0.55in', right: '0.55in' },
@@ -75,7 +110,8 @@ async function main() {
     // one page while the real PDF was two — screen layout is not print layout.
     const pages = await countPdfPages(pdf)
 
-    console.log(`Wrote ${PDF_OUT}`)
+    console.log(`Wrote ${pdfOut}`)
+    if (overlayArg) console.log(`Overlay: ${overlayArg}`)
     console.log(`Pages: ${pages}`)
     if (pages > 1) {
       console.warn(

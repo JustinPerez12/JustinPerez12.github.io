@@ -94,35 +94,38 @@ describe('one-page rationing', () => {
     return job.highlights.filter((highlight) => html.includes(esc(highlight).slice(0, 40)))
   }
 
-  it('caps NICE at six bullets while the data holds more', () => {
+  it('caps NICE at five bullets while the data holds more', () => {
     const nice = experience.find((job) => job.company === 'NICE')
-    expect(nice.highlights.length).toBeGreaterThan(6)
-    expect(bulletsIn('NICE')).toHaveLength(6)
+    expect(nice.highlights.length).toBeGreaterThan(5)
+    expect(bulletsIn('NICE')).toHaveLength(5)
   })
 
   it('takes the top bullets in data order, not an arbitrary subset', () => {
     const nice = experience.find((job) => job.company === 'NICE')
-    expect(bulletsIn('NICE')).toEqual(nice.highlights.slice(0, 6))
+    expect(bulletsIn('NICE')).toEqual(nice.highlights.slice(0, 5))
   })
 
-  it('caps Cox at four bullets', () => {
-    expect(bulletsIn('Cox Automotive')).toHaveLength(4)
+  it('caps Cox at three bullets', () => {
+    expect(bulletsIn('Cox Automotive')).toHaveLength(3)
   })
 
-  it('omits the school-era internship entirely', () => {
-    expect(html).not.toContain('Wavetronix')
+  it('includes Wavetronix as a full software-engineering role', () => {
+    // Promoted from an omitted "intern" line to a real role on the résumé.
+    expect(html).toContain('Wavetronix')
+    const wave = experience.find((job) => job.company === 'Wavetronix')
+    expect(html).toContain(esc(wave.period))
+    expect(bulletsIn('Wavetronix')).toHaveLength(2)
   })
 
-  it('keeps the internship on the site data even though the résumé drops it', () => {
-    // The omission is a résumé-space decision, not a deletion.
-    expect(experience.some((job) => job.company === 'Wavetronix')).toBe(true)
-  })
-
-  it('condenses the capstone to a heading but keeps the production projects', () => {
+  it('condenses the capstone and the side project to headings but keeps the paid-role depth', () => {
+    // Huddle Up (capstone) and Campus Core (side project) show as title lines on
+    // the résumé so the three paid roles keep their bullets on the one-pager;
+    // both still render in full on the site.
     expect(html).toContain('Huddle Up')
+    expect(html).toContain('Campus Core')
     expect(html).not.toContain(esc(projects.find((p) => p.name === 'Huddle Up').resumeBlurb ?? '@@none@@'))
+    expect(html).not.toContain(esc(projects.find((p) => p.name === 'Campus Core').resumeBlurb))
     expect(html).toContain(esc(projects.find((p) => p.name === 'Dynasty Futures').resumeBlurb))
-    expect(html).toContain(esc(projects.find((p) => p.name === 'Campus Core').resumeBlurb))
   })
 })
 
