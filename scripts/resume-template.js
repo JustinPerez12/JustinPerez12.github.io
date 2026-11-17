@@ -18,7 +18,7 @@ const RESUME_TITLE = 'Full Stack Software Engineer'
  * ownership. `highlights` are ordered strongest-first in the data; the résumé
  * takes from the top while the site renders all of them.
  */
-const BULLET_LIMIT = { NICE: 5, 'Cox Automotive': 3, Wavetronix: 2 }
+const BULLET_LIMIT = { NICE: 4, 'Cox Automotive': 3, Wavetronix: 2 }
 
 /**
  * Roles omitted from the résumé entirely (they still appear on the site). Empty
